@@ -121,34 +121,33 @@ GROUP BY
 # Replace None with your code
 df_under_20 = pd.read_sql("""
 WITH low_products AS (
-    SELECT orderdetails.productCode
-    FROM orderdetails
-    JOIN orders
-    ON orderdetails.orderNumber = orders.orderNumber
-    GROUP BY orderdetails.productCode
-    HAVING COUNT(DISTINCT orders.customerNumber) < 20
+    SELECT od.productCode
+    FROM orderdetails od
+    JOIN orders o
+      ON od.orderNumber = o.orderNumber
+    GROUP BY od.productCode
+    HAVING COUNT(DISTINCT o.customerNumber) < 20
 )
-
 SELECT DISTINCT
-    employees.employeeNumber,
-    employees.firstName,
-    employees.lastName,
-    offices.city,
-    offices.officeCode
-FROM employees
-JOIN customers
-ON employees.employeeNumber = customers.salesRepEmployeeNumber
-JOIN orders
-ON customers.customerNumber = orders.customerNumber
-JOIN orderdetails
-ON orders.orderNumber = orderdetails.orderNumber
-JOIN offices
-ON employees.officeCode = offices.officeCode
-WHERE orderdetails.productCode IN (
-    SELECT productCode
-    FROM low_products
+    e.employeeNumber,
+    e.firstName,
+    e.lastName,
+    of.city,
+    of.officeCode
+FROM employees e
+JOIN offices of
+  ON e.officeCode = of.officeCode
+JOIN customers c
+  ON e.employeeNumber = c.salesRepEmployeeNumber
+WHERE EXISTS (
+    SELECT 1
+    FROM orders o
+    JOIN orderdetails od
+      ON o.orderNumber = od.orderNumber
+    WHERE o.customerNumber = c.customerNumber
+      AND od.productCode IN (SELECT productCode FROM low_products)
 )
+ORDER BY e.employeeNumber;
 """, conn)
-
 
 conn.close()
