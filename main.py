@@ -72,12 +72,14 @@ ORDER BY numCustomers DESC
 # STEP 7
 # Replace None with your code
 df_product_sold = pd.read_sql("""
-SELECT productName, COUNT(orderNumber) AS numorders,
-SUM (quantityOrdered) AS totalunits
+SELECT
+    products.productName,
+    COUNT(orderDetails.orderNumber) AS numorders,
+    SUM(orderDetails.quantityOrdered) AS totalunits
 FROM products
 JOIN orderDetails
 ON products.productCode = orderDetails.productCode
-GROUP BY productName, products.productCode
+GROUP BY products.productCode, products.productName
 ORDER BY totalunits DESC
 """, conn)
 
@@ -112,7 +114,6 @@ ON employees.employeeNumber = customers.salesRepEmployeeNumber
 GROUP BY
     offices.officeCode,
     offices.city
-ORDER BY n_customers DESC
 """, conn)
 
 
