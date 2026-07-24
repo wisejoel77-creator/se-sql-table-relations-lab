@@ -77,7 +77,7 @@ SUM (quantityOrdered) AS totalunits
 FROM products
 JOIN orderDetails
 ON products.productCode = orderDetails.productCode
-GROUP BY productName, productCode
+GROUP BY productName, products.productCode
 ORDER BY totalunits DESC
 """, conn)
 
