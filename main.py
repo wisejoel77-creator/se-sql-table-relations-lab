@@ -20,11 +20,11 @@ WHERE city = 'Boston'
 
 # STEP 2
 # Replace None with your code
-df_zero_emp = pd.read_sql("""SELECT officeCode, city
+df_zero_emp = pd.read_sql("""SELECT offices.officeCode, offices.city
 FROM offices
 LEFT JOIN employees
 ON offices.officeCode = employees.officeCode
-WHERE employees.emloyeeNumber IS NULL
+WHERE employees.employeeNumber IS NULL
 """,conn)
 
 # STEP 3
