@@ -11,7 +11,7 @@ pd.read_sql("""SELECT * FROM sqlite_master""", conn)
 
 # STEP 1
 # Replace None with your code
-df_boston = pd.read_sql("""SELECT firstName, lastName, jobTitle 
+df_boston = pd.read_sql("""SELECT firstName, lastName
 FROM employees 
 JOIN offices
 ON employees.officeCode = offices.officeCode
@@ -93,14 +93,9 @@ JOIN orderdetails
 ON products.productCode = orderdetails.productCode
 JOIN orders
 ON orderdetails.orderNumber = orders.orderNumber
-JOIN customers
-ON orders.customerNumber = customers.customerNumber
-GROUP BY
-    products.productCode,
-    products.productName
+GROUP BY products.productCode, products.productName
 ORDER BY numpurchasers DESC
 """, conn)
-
 
 # STEP 9
 # Replace None with your code
@@ -123,10 +118,9 @@ ORDER BY n_customers DESC
 
 # STEP 10
 # Replace None with your code
-df_under_20 =  pd.read_sql("""
+df_under_20 = pd.read_sql("""
 WITH low_products AS (
-    SELECT
-        orderdetails.productCode
+    SELECT orderdetails.productCode
     FROM orderdetails
     JOIN orders
     ON orderdetails.orderNumber = orders.orderNumber
@@ -153,7 +147,6 @@ WHERE orderdetails.productCode IN (
     SELECT productCode
     FROM low_products
 )
-ORDER BY employees.employeeNumber
 """, conn)
 
 
